@@ -312,6 +312,7 @@ dependencies = [
  "futures 0.3.25",
  "jsonwebtoken",
  "serde 1.0.152",
+ "serde_json",
  "sqlx",
  "tracing",
  "tracing-futures",

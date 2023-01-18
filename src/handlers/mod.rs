@@ -7,5 +7,5 @@ pub fn app_config(config: &mut ServiceConfig) {
 }
 
 pub async fn health() -> HttpResponse {
-    HttpResponse::Ok().finish()
+    HttpResponse::Ok().json(serde_json::json!({"success": true, "message": "Server is running and healthy...", "data": null}))
 }

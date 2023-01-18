@@ -25,3 +25,4 @@ validator_derive = "0.10"
 jsonwebtoken = "7.1"
 argonautica = { version = "0.2", features = ["simd"] } 
 futures = { version = "0.3", features = ["compat"] } 
+serde_json = "1.0.91"
