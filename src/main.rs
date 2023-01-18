@@ -14,15 +14,25 @@ use tracing::info;
 async fn main() -> Result<()> {
     let configuration = Config::from_env().expect("Failed to load server configuration");
 
+    let pool = configuration
+        .db_pool()
+        .await
+        .expect("Database configuration");
+
     info!(
         "Starting server at http://{}:{}/",
         configuration.host, configuration.port
     );
 
-    HttpServer::new(move || App::new().wrap(Logger::default()).configure(app_config))
-        .bind(format!("{}:{}", configuration.host, configuration.port))?
-        .run()
-        .await?;
+    HttpServer::new(move || {
+        App::new()
+            .wrap(Logger::default())
+            .data(pool.clone())
+            .configure(app_config)
+    })
+    .bind(format!("{}:{}", configuration.host, configuration.port))?
+    .run()
+    .await?;
 
     Ok(())
 }
