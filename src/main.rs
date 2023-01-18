@@ -19,6 +19,8 @@ async fn main() -> Result<()> {
         .await
         .expect("Database configuration");
 
+    let crypto_service = configuration.crypto_service();
+
     info!(
         "Starting server at http://{}:{}/",
         configuration.host, configuration.port
@@ -28,6 +30,7 @@ async fn main() -> Result<()> {
         App::new()
             .wrap(Logger::default())
             .data(pool.clone())
+            .data(crypto_service.clone())
             .configure(app_config)
     })
     .bind(format!("{}:{}", configuration.host, configuration.port))?

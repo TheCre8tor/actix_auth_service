@@ -1,4 +1,6 @@
-use std::time::Duration;
+pub mod crypto;
+
+use std::{sync::Arc, time::Duration};
 
 use color_eyre::Result;
 use dotenv::dotenv;
@@ -8,11 +10,14 @@ use sqlx::PgPool;
 use tracing::{info, instrument};
 use tracing_subscriber::EnvFilter;
 
+use self::crypto::CryptoService;
+
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub host: String,
     pub port: i32,
     pub database_url: String,
+    pub secret_key: String,
 }
 
 impl Config {
@@ -41,5 +46,11 @@ impl Config {
             .build(&self.database_url)
             .await
             .context("Failed to create database connection pool.")
+    }
+
+    pub fn crypto_service(&self) -> CryptoService {
+        CryptoService {
+            key: Arc::new(self.secret_key.clone()),
+        }
     }
 }
